@@ -1,0 +1,8 @@
+---
+# tasks file for package_management
+- name: Install package
+  ansible.builtin.dnf:
+    name: "{{ item.value.package_name }}"
+    state: "{{ item.value.state }}"
+  loop: "{{ packages | dict2items }}"
+  when: packages is defined
