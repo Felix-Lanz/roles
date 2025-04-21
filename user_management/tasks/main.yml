@@ -4,27 +4,27 @@
 - name: Create groups
   become: true
   ansible.builtin.group:
-    name: "{{ item.groupname }}"
-    state: "{{ item.state | default(omit) }}"
-    gid: "{{ item.gid | default(omit) }}"
-    system: "{{ item.system | default(omit) }}"
-  loop: "{{ groups | dict2items }}"
-  when: groups is defined
+    name: "{{ item.value.groupname }}"
+    state: "{{ item.value.state | default(omit) }}"
+    gid: "{{ item.value.gid | default(omit) }}"
+    system: "{{ item.value.system | default(omit) }}"
+  loop: "{{ group_list | dict2items }}"
+  when: group_list is defined
 
 - name: Create users
   become: true
   ansible.builtin.user:
-    name: "{{ item.username }}"
-    state: "{{ item.state | default(omit) }}"
-    uid: "{{ item.uid | default(omit) }}"
-    ssh_key_file: "{{ item.ssh_keyfile | default(omit) }}"
-    password: "{{ item.password | default(omit) }}"
-    system: "{{ item.system | default(omit) }}"
-    home: "{{ item.home | default(omit) }}"
-    group: "{{ item.group | default(omit) }}"
-    groups: "{{ item.groups | default(omit) }}"
-    create_home: "{{ item.create_home | default(omit) }}"
-    comment: "{{ item.comment | default(omit) }}"
+    name: "{{ item.value.username }}"
+    state: "{{ item.value.state | default(omit) }}"
+    uid: "{{ item.value.uid | default(omit) }}"
+    ssh_key_file: "{{ item.value.ssh_keyfile | default(omit) }}"
+    password: "{{ item.value.password | default(omit) }}"
+    system: "{{ item.value.system | default(omit) }}"
+    home: "{{ item.value.home | default(omit) }}"
+    group: "{{ item.value.group | default(omit) }}"
+    groups: "{{ item.value.groups | default(omit) }}"
+    create_home: "{{ item.value.create_home }}"
+    skeleton: "{{ item.value.skeletoin | default(omit) }}"
+    comment: "{{ item.value.comment | default(omit) }}"
   loop: "{{ users | dict2items }}"
   when: users is defined
-
