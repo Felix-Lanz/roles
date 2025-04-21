@@ -8,6 +8,7 @@
     state: "{{ item.value.state | default(omit) }}"
     gid: "{{ item.value.gid | default(omit) }}"
     system: "{{ item.value.system | default(omit) }}"
+
   loop: "{{ group_list | dict2items }}"
   when: group_list is defined
 
