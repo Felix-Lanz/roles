@@ -1,0 +1,21 @@
+---
+# tasks file for firewall_management
+- name: Check if firewalld is installed
+  ansible.builtin.dnf:
+    name: firewalld
+    state: present
+
+- name: Apply firewall rule
+  ansible.poxix.firewalld:
+    offline: "{{ item.value.offline | default(omit) }}"
+    permanent: "{{ item.value.permanent | default(omit) }}"
+    immediate: "{{ item.value.immediate | default(omit) }}"
+    state: "{{ item.value.state }}"
+    service: "{{ item.value.service | default(omit) }}"
+    protocol: "{{ item.value.protocol | default(omit) }}"
+    port: "{{ item.value.port | default(omit) }}"
+    zone: "{{ item.value.zone | default(omit) }}"
+  loop: "{{ firewall_rules | dict2items }}"
+  when: firewall_rules is defined
+  notify:
+    - Restart firewalld
