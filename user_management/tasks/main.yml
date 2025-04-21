@@ -8,8 +8,8 @@
     state: "{{ item.state | default(omit) }}"
     gid: "{{ item.gid | default(omit) }}"
     system: "{{ item.system | default(omit) }}"
-  loop: "{{ groups | dict2items }}"
-  when: groups is defined
+  loop: "{{ group_list | dict2items }}"
+  when: group_list is defined
 
 - name: Create users
   become: true
