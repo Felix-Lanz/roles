@@ -6,7 +6,7 @@
     state: present
 
 - name: Apply firewall rule
-  ansible.poxix.firewalld:
+  ansible.posix.firewalld:
     offline: "{{ item.value.offline | default(omit) }}"
     permanent: "{{ item.value.permanent | default(omit) }}"
     immediate: "{{ item.value.immediate | default(omit) }}"
