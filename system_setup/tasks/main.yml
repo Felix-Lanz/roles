@@ -1,0 +1,42 @@
+---
+# tasks file for system_setup
+- name: Setup Ansible connection user
+  ansible.builtin.user:
+    name: "{{ ansible_deploy }}"
+    state: present
+    comment: User for deploying ansible jobs
+    groups: wheel
+    create_home: true
+
+- name: Create .ssh directory for deployment user
+  ansible.builtin.file:
+    path: "/home/{{ ansible_deploy }}/.ssh"
+    state: directory
+    mode: '0700'
+    owner: "{{ ansible_deploy }}"
+    group: "{{ ansible_deploy }}"
+
+- name: Copy SSH key
+  ansible.builtin.copy:
+    src: authorized_keys
+    dest: "/home/{{ ansible_deploy }}/.ssh/authorized_keys"
+    mode: '0600'
+    owner: "{{ ansible_deploy }}"
+    group: "{{ ansible_deploy }}"
+
+- name: Check hostname
+  ansible.builtin.command:
+    cmd: cat /etc/hostname
+  register: remote_hostname
+
+- name: Set hostname
+  ansible.builtin.shell:
+    cmd: echo "{{ hostname }}" > /etc/hostname
+  when: remote_hostname.stdout != hostname
+
+- name: Remove %wheel from sudoers
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    search_string: "%wheel  ALL=(ALL)       ALL"
+    line: "%wheel  ALL=(ALL)       NOPASSWD: ALL"
+    state: present
